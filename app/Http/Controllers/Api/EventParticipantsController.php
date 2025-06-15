@@ -41,6 +41,11 @@ class EventParticipantsController extends Controller
 
         $userId = Auth::id();
 
+        // Проверяем, не является ли пользователь создателем события
+        if ($event->user_id === $userId) {
+            return response()->json(['message' => 'Вы не можете подписаться на собственное событие - вы уже организатор'], 400);
+        }
+
         // Проверяем, не является ли пользователь уже участником
         if ($event->participants()->where('user_id', $userId)->exists()) {
             return response()->json(['message' => 'Вы уже участник этого события'], 400);
@@ -60,6 +65,11 @@ class EventParticipantsController extends Controller
     public function leave(Event $event): JsonResponse
     {
         $userId = Auth::id();
+
+        // Проверяем, не является ли пользователь создателем события
+        if ($event->user_id === $userId) {
+            return response()->json(['message' => 'Вы не можете покинуть собственное событие - вы организатор'], 400);
+        }
 
         // Проверяем, является ли пользователь участником
         if (!$event->participants()->where('user_id', $userId)->exists()) {
@@ -86,6 +96,11 @@ class EventParticipantsController extends Controller
         }
 
         $userId = Auth::id();
+
+        // Проверяем, не является ли пользователь создателем события
+        if ($event->user_id === $userId) {
+            return response()->json(['message' => 'Вы не можете изменить статус участия в собственном событии - вы организатор'], 400);
+        }
 
         // Проверяем, является ли пользователь участником
         if (!$event->participants()->where('user_id', $userId)->exists()) {
