@@ -9,15 +9,24 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['user_events', 'join_events']);
+            if (Schema::hasColumn('users', 'user_events')) {
+                $table->dropColumn('user_events');
+            }
+            if (Schema::hasColumn('users', 'join_events')) {
+                $table->dropColumn('join_events');
+            }
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->json('user_events')->nullable();
-            $table->json('join_events')->nullable();
+            if (!Schema::hasColumn('users', 'user_events')) {
+                $table->json('user_events')->nullable();
+            }
+            if (!Schema::hasColumn('users', 'join_events')) {
+                $table->json('join_events')->nullable();
+            }
         });
     }
 }; 
