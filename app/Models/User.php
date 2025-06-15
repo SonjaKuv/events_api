@@ -6,11 +6,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -25,8 +29,6 @@ class User extends Authenticatable
         'telegram_id',
         'vk_id',
         'instagram_id',
-        'user_events',
-        'join_events',
         'friends',
         'is_deleted',
     ];
@@ -49,10 +51,45 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'user_events' => 'array',
-        'join_events' => 'array',
         'friends' => 'array',
+        'is_deleted' => 'boolean',
     ];
+
+    /**
+     * События, созданные пользователем
+     * 
+     * @return HasMany
+     */
+    public function createdEvents(): HasMany
+    {
+        return $this->hasMany(Event::class);
+    }
+
+    /**
+     * События, в которых участвует пользователь
+     * 
+     * @return BelongsToMany
+     */
+    public function participatingEvents(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'event_participants')
+            ->withPivot('status')
+            ->withTimestamps();
+    }
+
+    /**
+     * Получить все события пользователя (созданные + участвующие)
+     * 
+     * @return Builder
+     */
+    public function getAllEvents(): Builder
+    {
+        return Event::where(function ($query) {
+            $query->where('user_id', $this->id)
+                ->orWhereHas('participants', function ($q) {
+                    $q->where('user_id', $this->id);
+                });
+        });
+    }
 }
