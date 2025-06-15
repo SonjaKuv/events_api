@@ -34,8 +34,6 @@ class UserController extends Controller
             'telegram_id' => 'nullable|numeric',
             'vk_id' => 'nullable|numeric',
             'instagram_id' => 'nullable|numeric',
-            'user_events' => 'nullable|array',
-            'join_events' => 'nullable|array',
             'friends' => 'nullable|array',
             'is_deleted' => 'nullable|boolean',
         ]);
@@ -55,8 +53,6 @@ class UserController extends Controller
             'telegram_id' => $validated['telegram_id'] ?? null,
             'vk_id' => $validated['vk_id'] ?? null,
             'instagram_id' => $validated['instagram_id'] ?? null,
-            'user_events' => $validated['user_events'] ?? [],
-            'join_events' => $validated['join_events'] ?? [],
             'friends' => $validated['friends'] ?? [],
             'is_deleted' => $validated['is_deleted'] ?? false,
         ]);
@@ -80,8 +76,6 @@ class UserController extends Controller
             'telegram_id' => 'nullable|numeric',
             'vk_id' => 'nullable|numeric',
             'instagram_id' => 'nullable|numeric',
-            'user_events' => 'nullable|array',
-            'join_events' => 'nullable|array',
             'friends' => 'nullable|array',
             'is_deleted' => 'nullable|boolean',
         ]);
