@@ -97,7 +97,7 @@ php artisan migrate
 # Создайте бота через @BotFather в Telegram
 # Добавьте в .env:
 TELEGRAM_BOT_TOKEN=your_bot_token
-TELEGRAM_WEBHOOK_URL=https://yourdomain.com/api/telegram/webhook
+TELEGRAM_WEBHOOK_URL=https://yourdomain.com/api/events-api/telegram/webhook
 ```
 
 ### 4. Запуск
@@ -117,19 +117,19 @@ php artisan serve
 
 #### Получить список событий
 ```http
-GET /api/events?page=1&per_page=10&search=концерт
+GET /api/events-api/events?page=1&per_page=10&search=концерт
 ```
 **Ответ:** Пагинированный список доступных событий
 
 #### Получить публичные события
 ```http
-GET /api/events/public
+GET /api/events-api/events/public
 ```
 **Ответ:** Список всех публичных событий
 
 #### Получить информацию о событии
 ```http
-GET /api/events/{id}
+GET /api/events-api/events/{id}
 ```
 **Ответ:** Детальная информация о событии с участниками и комментариями
 
@@ -144,7 +144,7 @@ GET /api/events/{id}
 
 #### Регистрация
 ```http
-POST /api/auth/register
+POST /api/events-api/auth/register
 Content-Type: application/json
 
 {
@@ -156,7 +156,7 @@ Content-Type: application/json
 
 #### Авторизация
 ```http
-POST /api/auth/login
+POST /api/events-api/auth/login
 Content-Type: application/json
 
 {
@@ -168,13 +168,13 @@ Content-Type: application/json
 
 #### Получить информацию о пользователе
 ```http
-GET /api/auth/me
+GET /api/events-api/auth/me
 Authorization: Bearer your_api_token
 ```
 
 #### Выход
 ```http
-POST /api/auth/logout
+POST /api/events-api/auth/logout
 Authorization: Bearer your_api_token
 ```
 
@@ -184,7 +184,7 @@ Authorization: Bearer your_api_token
 
 #### Создать событие
 ```http
-POST /api/events
+POST /api/events-api/events
 Authorization: Bearer your_api_token
 Content-Type: application/json
 
@@ -202,23 +202,23 @@ Content-Type: application/json
 
 #### Обновить событие
 ```http
-PUT /api/events/{id}
+PUT /api/events-api/events/{id}
 Authorization: Bearer your_api_token
 ```
 **Права:** Только создатель события
 
 #### Удалить событие
 ```http
-DELETE /api/events/{id}
+DELETE /api/events-api/events/{id}
 Authorization: Bearer your_api_token
 ```
 **Права:** Только создатель события
 
 #### Получить мои события
 ```http
-GET /api/events/user/me          # Все события пользователя
-GET /api/events/user/created     # Созданные события
-GET /api/events/user/participating # События, где участвую
+GET /api/events-api/events/user/me          # Все события пользователя
+GET /api/events-api/events/user/created     # Созданные события
+GET /api/events-api/events/user/participating # События, где участвую
 ```
 
 ---
@@ -227,25 +227,25 @@ GET /api/events/user/participating # События, где участвую
 
 #### Получить список участников
 ```http
-GET /api/events/{id}/participants
+GET /api/events-api/events/{id}/participants
 Authorization: Bearer your_api_token
 ```
 
 #### Присоединиться к событию
 ```http
-POST /api/events/{id}/join
+POST /api/events-api/events/{id}/join
 Authorization: Bearer your_api_token
 ```
 
 #### Покинуть событие
 ```http
-DELETE /api/events/{id}/leave
+DELETE /api/events-api/events/{id}/leave
 Authorization: Bearer your_api_token
 ```
 
 #### Изменить статус участия
 ```http
-PUT /api/events/{id}/status
+PUT /api/events-api/events/{id}/status
 Authorization: Bearer your_api_token
 Content-Type: application/json
 
@@ -260,13 +260,13 @@ Content-Type: application/json
 
 #### Получить комментарии события
 ```http
-GET /api/events/{id}/comments
+GET /api/events-api/events/{id}/comments
 Authorization: Bearer your_api_token
 ```
 
 #### Добавить комментарий
 ```http
-POST /api/events/{id}/comments
+POST /api/events-api/events/{id}/comments
 Authorization: Bearer your_api_token
 Content-Type: application/json
 
@@ -277,14 +277,14 @@ Content-Type: application/json
 
 #### Редактировать комментарий
 ```http
-PUT /api/events/{event_id}/comments/{comment_id}
+PUT /api/events-api/events/{event_id}/comments/{comment_id}
 Authorization: Bearer your_api_token
 ```
 **Права:** Только автор комментария
 
 #### Удалить комментарий
 ```http
-DELETE /api/events/{event_id}/comments/{comment_id}
+DELETE /api/events-api/events/{event_id}/comments/{comment_id}
 Authorization: Bearer your_api_token
 ```
 **Права:** Автор комментария или создатель события
@@ -295,20 +295,20 @@ Authorization: Bearer your_api_token
 
 #### Получить статус привязки
 ```http
-GET /api/telegram/status
+GET /api/events-api/telegram/status
 Authorization: Bearer your_api_token
 ```
 
 #### Сгенерировать код для привязки
 ```http
-POST /api/telegram/generate-code
+POST /api/events-api/telegram/generate-code
 Authorization: Bearer your_api_token
 ```
 **Ответ:** `{ "code": "ABC123", "expires_at": "2024-06-15T20:00:00Z" }`
 
 #### Отвязать Telegram аккаунт
 ```http
-DELETE /api/telegram/unlink
+DELETE /api/events-api/telegram/unlink
 Authorization: Bearer your_api_token
 ```
 
@@ -395,7 +395,7 @@ SESSION_DRIVER=redis
 
 # Telegram бот
 TELEGRAM_BOT_TOKEN=your_bot_token
-TELEGRAM_WEBHOOK_URL=https://yourdomain.com/api/telegram/webhook
+TELEGRAM_WEBHOOK_URL=https://yourdomain.com/api/events-api/telegram/webhook
 ```
 
 ---
@@ -406,15 +406,15 @@ TELEGRAM_WEBHOOK_URL=https://yourdomain.com/api/telegram/webhook
 
 ```bash
 # Получить публичные события
-curl -X GET "https://yourdomain.com/api/events/public"
+curl -X GET "https://yourdomain.com/api/events-api/events/public"
 
 # Авторизация
-curl -X POST "https://yourdomain.com/api/auth/login" \
+curl -X POST "https://yourdomain.com/api/events-api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email":"user@example.com","password":"password123"}'
 
 # Создать событие
-curl -X POST "https://yourdomain.com/api/events" \
+curl -X POST "https://yourdomain.com/api/events-api/events" \
   -H "Authorization: Bearer your_token" \
   -H "Content-Type: application/json" \
   -d '{"name":"Тест событие","start_datetime":"2024-06-15 19:00:00","location_name":"Тестовое место","description":"Описание","is_public":true}'
