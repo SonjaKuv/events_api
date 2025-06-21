@@ -91,10 +91,9 @@ class EventsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'start_date' => 'required|date',
-            'start_time' => 'required|date_format:H:i',
+            'start_datetime' => 'required|date',
             'is_long' => 'boolean',
-            'end_date' => 'required_if:is_long,true|date|after_or_equal:start_date',
+            'end_date' => 'required_if:is_long,true|date|after_or_equal:start_datetime',
             'location_name' => 'required|string|max:255',
             'location_coords' => 'required|array',
             'description' => 'required|string',
@@ -140,10 +139,9 @@ class EventsController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'string|max:255',
-            'start_date' => 'date',
-            'start_time' => 'date_format:H:i',
+            'start_datetime' => 'date',
             'is_long' => 'boolean',
-            'end_date' => 'date|after_or_equal:start_date',
+            'end_date' => 'date|after_or_equal:start_datetime',
             'location_name' => 'string|max:255',
             'location_coords' => 'array',
             'description' => 'string',
@@ -183,7 +181,7 @@ class EventsController extends Controller
         
         $events = $user->getAllEvents()
             ->with(['comments', 'participants'])
-            ->orderBy('start_date', 'desc')
+            ->orderBy('start_datetime', 'desc')
             ->paginate($perPage);
 
         return response()->json($events);
@@ -196,7 +194,7 @@ class EventsController extends Controller
     {
         $events = Event::where('is_public', true)
             ->with(['user', 'comments'])
-            ->orderBy('start_date', 'desc')
+            ->orderBy('start_datetime', 'desc')
             ->get();
 
         return response()->json($events);
@@ -212,7 +210,7 @@ class EventsController extends Controller
         
         $events = $user->createdEvents()
             ->with(['comments', 'participants'])
-            ->orderBy('start_date', 'desc')
+            ->orderBy('start_datetime', 'desc')
             ->paginate($perPage);
 
         return response()->json($events);
@@ -228,7 +226,7 @@ class EventsController extends Controller
         
         $events = $user->participatingEvents()
             ->with(['user', 'comments'])
-            ->orderBy('start_date', 'desc')
+            ->orderBy('start_datetime', 'desc')
             ->paginate($perPage);
 
         return response()->json($events);

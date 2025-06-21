@@ -12,8 +12,7 @@ class Event extends Model
     protected $fillable = [
         'user_id',
         'name',
-        'start_date',
-        'start_time',
+        'start_datetime',
         'is_long',
         'end_date',
         'location_name',
@@ -28,8 +27,7 @@ class Event extends Model
     ];
 
     protected $casts = [
-        'start_date' => 'date',
-        'start_time' => 'string',
+        'start_datetime' => 'datetime',
         'end_date' => 'date',
         'location_coords' => 'array',
         'weather' => 'array',

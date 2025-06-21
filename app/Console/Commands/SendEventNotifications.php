@@ -45,9 +45,10 @@ class SendEventNotifications extends Command
         $endTime = $targetTime->copy()->addMinutes(5);
 
         // Находим события, которые начинаются в указанное время
-        $events = Event::whereDate('start_date', $targetTime->toDateString())
-            ->whereTime('start_time', '>=', $startTime->format('H:i:s'))
-            ->whereTime('start_time', '<=', $endTime->format('H:i:s'))
+        $events = Event::whereBetween('start_datetime', [
+                $startTime->format('Y-m-d H:i:s'),
+                $endTime->format('Y-m-d H:i:s')
+            ])
             ->with(['user', 'participants.user'])
             ->get();
 
@@ -113,8 +114,8 @@ class SendEventNotifications extends Command
             $eventData = [
                 'name' => $event->name,
                 'location_name' => $event->location_name,
-                'start_date' => $event->start_date->format('d.m.Y'),
-                'start_time' => $event->start_time,
+                'start_date' => $event->start_datetime->format('d.m.Y'),
+                'start_time' => $event->start_datetime->format('H:i'),
                 'description' => $event->description,
             ];
 
